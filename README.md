@@ -4,8 +4,6 @@
 | | |
 |---|---|
 | **SVTH** | Trần Hồng Sơn |
-| **MSSV** | 20200331 |
-| **Môn học** | Thực hành Thiết kế SoC |
 | **Đơn vị** | Khoa Điện tử – Viễn thông, ĐH Khoa học Tự nhiên TP.HCM |
 | **Platform** | Terasic DE10 Standard (Intel Cyclone V) · Quartus Prime |
 | **Năm** | Tháng 12, 2024 |
@@ -34,7 +32,7 @@ Mã Morse là hệ thống mã hóa thông tin văn bản dạng số, chữ cá
 - Hàng hải và cứu hộ — tín hiệu SOS (`...---...`)
 - Dự phòng trong truyền tải khi các phương thức khác gặp sự cố
 - Lĩnh vực quân sự — mã hóa liên lạc thư tín
-Đồ án này xây dựng **IP giải mã Morse** trên FPGA (Terasic DE10 Standard), tích hợp vào hệ thống SoC Nios II, với kết quả hiển thị ra **LEDR** và **LCD 16×2**.
+- Đồ án này xây dựng **IP giải mã Morse** trên FPGA (Terasic DE10 Standard), tích hợp vào hệ thống SoC Nios II, với kết quả hiển thị ra **LEDR** và **LCD 16×2**.
  
 ---
  
@@ -43,24 +41,7 @@ Mã Morse là hệ thống mã hóa thông tin văn bản dạng số, chữ cá
 ### 2.1 Sơ đồ khối hệ thống
  
 ```
-                    CLOCK_50 / KEY[0](reset_n)
-                           │
-        ┌──────────────────▼──────────────────────────────────┐
-        │                Avalon Switch Fabric                  │
-        │                                                      │
-        │   Nios II    On-Chip    JTAG    MORSE    GPIO  BUTTON│
-        │  Processor   Memory    UART      IP     (LCD)  PIO  │
-        │     ↕           ↕        ↕        ↕       ↕     ↕   │
-        └──────────────────────────────────────────────────────┘
-                                           │
-                          ┌────────────────┴────────────────┐
-                          │         Conduit Signals          │
-                          │  SW[9]  → MODE                   │
-                          │  SW[7:0]→ inital                 │
-                          │  LEDR[7:0] ← ascii_out           │
-                          │  LEDR[8]   ← dot_t               │
-                          │  LEDR[9]   ← wait_t              │
-                          └──────────────────────────────────┘
+![system](./img/system.png)
 ```
  
 ### 2.2 Các thành phần chính
