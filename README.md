@@ -779,31 +779,8 @@ GPIO PIO (16-bit output register)
                     hoặc thực thi lệnh điều khiển
 ```
  
-### A.9 Ví dụ thực tế: Hiển thị ký tự 'G' (0x47) lên dòng 2
- 
-```c
-// Giả sử cursor đang ở dòng 2 (sau SendCommand(0xC0))
-// Morse decode: length=3, morse_code=0b110 → G → ascii_code = 0x47
- 
-SendData(0x47);  // Ghi 'G'
-// Pha 1: GPIO = 0x0500 | 0x47 = 0x0547
-//   → RS=1, EN=1, D[7:0]=0x47  (LCD nhận 'G')
-//   delay_ms(40)
-// Pha 2: GPIO = 0x0400 | 0x47 = 0x0447
-//   → RS=1, EN=0, D[7:0]=0x47  (LCD chốt và hiển thị 'G')
-//   delay_ms(40)
-```
- 
-Kết quả trên LCD:
-```
-┌────────────────┐
-│ 20200331 sOC   │  ← dòng 1 (cố định từ init)
-│ G              │  ← dòng 2 (ký tự được giải mã từ Morse)
-└────────────────┘
-```
- 
+
 
  
 ---
- 
-*— HẾT —*
+
