@@ -109,7 +109,7 @@ module Morse_IP
 );
 ```
  
-### 3.2 Hai chế độ hoạt động
+### 3.2 Hai chế độ encoder
  
 IP hỗ trợ **2 chế độ** điều khiển bởi tín hiệu `MODE` (gắn với `SW[9]`):
  
@@ -128,6 +128,20 @@ IP hỗ trợ **2 chế độ** điều khiển bởi tín hiệu `MODE` (gắn 
 - `KEY[3]` kích hoạt ghi `ascii_out` lên LCD từ C code.
 - `KEY[2]` reset buffer để nhập ký tự mới.
 - `KEY[0]` là `reset_n` toàn cục (active-low).
+
+So sánh Encoder/Decoder theo Mode
+ 
+| Tiêu chí | Mode 0 (Setup) | Mode 1 (Button) |
+|----------|:--------------:|:---------------:|
+| **Nguồn `morse_code`** | `SW[4:0]` (inital) | FSM shift register |
+| **Nguồn `length`** | `SW[7:5]` (inital) | FSM đếm lần nhấn |
+| **Encoder có hoạt động?** | ❌ Bỏ qua | ✅ FSM đo thời gian |
+| **Decoder có hoạt động?** | ✅ Luôn chạy | ✅ Luôn chạy |
+| **Tốc độ cập nhật `ascii_out`** | Tức thì theo SW | Sau mỗi ký hiệu nhấn |
+| **Phù hợp cho** | Debug, kiểm tra bảng | Nhập Morse thực tế |
+| **`ascii_out` khi length = 0** | `0x5F` (`_`) | `0x5F` (`_`) |
+ 
+---
 ### 3.3 Thông số thời gian
  
 | Tham số | Giá trị mặc định | Thời gian @ 50 MHz | Mô tả |
