@@ -4,9 +4,8 @@
 | | |
 |---|---|
 | **SVTH** | Trần Hồng Sơn |
-| **Đơn vị** | Khoa Điện tử – Viễn thông, ĐH Khoa học Tự nhiên TP.HCM |
+| **Môn học** | Thực hành thiết kế SoC|
 | **Platform** | Terasic DE10 Standard (Intel Cyclone V) · Quartus Prime |
-| **Năm** | Tháng 12, 2024 |
  
 ---
  
@@ -142,14 +141,28 @@ So sánh Encoder/Decoder theo Mode
 | **`ascii_out` khi length = 0** | `0x5F` (`_`) | `0x5F` (`_`) |
  
 ---
-### 3.3 Thông số thời gian
+### 3.3 Tổng quan 
  
-| Tham số | Giá trị mặc định | Thời gian @ 50 MHz | Mô tả |
-|---------|------------------|--------------------|-------|
-| `DOT_TIME` | `25_000_000` | 0.5 s | Ngưỡng: nhấn < 0.5 s → dot; nhấn ≥ 0.5 s → dash |
-| `WAIT_TIME` | `50_000_000` | 1.0 s | Timeout: gap > 1 s → ký tự hoàn chỉnh |
+Morse IP hoạt động theo **hai bước xử lý nối tiếp nhau**: Encoder (mã hóa tín hiệu vật lý thành chuỗi Morse) và Decoder (giải mã chuỗi Morse thành ASCII). Hai bước này luôn tồn tại đồng thời, nhưng vai trò của Encoder thay đổi tùy theo `MODE`.
  
-> **Khi mô phỏng:** Giảm xuống `DOT_TIME=2`, `WAIT_TIME=5` để tiện quan sát dạng sóng.
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                  Morse IP — Luồng xử lý nội bộ                   │
+│                                                                  │
+│      [ENCODER]                            [DECODER]              │
+│      Button/ SW                       {length, morse_code}       │
+│         │                                     │                  │
+│         ▼                                     ▼                  │
+│  Đo thời gian nhấn nút           Tra bảng case-case lồng nhau    │
+│  hoặc đọc SW[7:0] trực tiếp      theo length + morse_code        │
+│         │                                     │                  │
+│         ▼                                     ▼                  │
+│  {length[2:0], morse_code[4:0]}        ascii_out[7:0]            │
+│  (thanh ghi nội bộ)                    → LEDR + LCD              │
+└──────────────────────────────────────────────────────────────────┘
+```
+ 
+> **Lưu ý quan trọng:** IP này **luôn là decoder ở đầu ra** — đầu ra cuối cùng luôn là `ascii_out`. Phần Encoder chỉ là bước trung gian tạo ra `{length, morse_code}` từ tín hiệu đầu vào khác nhau tùy mode.
  
 ---
  
